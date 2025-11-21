@@ -5,7 +5,10 @@ public class PlayerMovement : MonoBehaviour
 {
     Rigidbody2D rb;
     public int speed;
-    public float max_v = 50; 
+    public float max_v = 50;
+    public int health = 3;
+
+    public bool IsMoving => rb.linearVelocity.magnitude > 0.1f; 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -30,6 +33,11 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.A) && rb.linearVelocity.magnitude < max_v)
         {
             rb.AddForce(new Vector2(-1, 0) * speed);
+        }
+        Debug.Log(rb.linearVelocity);
+        if (health < 0)
+        {
+            Destroy(gameObject); 
         }
     }   
 }

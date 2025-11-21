@@ -7,17 +7,29 @@ public class lookatplayerscript : MonoBehaviour
     public float radius = 10;
     [Range(1, 360)] public float angle = 45f;
     public LayerMask targetLayer;
-    public LayerMask obstructionLayer;
+    public LayerMask obstructionLayer;   
     public GameObject Square; 
-
-    public GameObject SquareRef;
+    public GameObject playerRef;
+    private PlayerMovement PlayerMovement; 
 
     public bool hasLineOfSight { get; private set; }
-
+    private float healthTimer;
     void Start()
-    {
-        SquareRef = GameObject.FindGameObjectWithTag("Player");
+    {        
+        playerRef = GameObject.FindGameObjectWithTag("Player");
         StartCoroutine(FOVCheck());
+    }
+    void Update()
+    {
+        healthTimer -= Time.deltaTime;
+        if (hasLineOfSight && healthTimer <= 0 
+        && Square.GetComponent<PlayerMovement>().IsMoving) 
+        {
+            Square.GetComponent<PlayerMovement>().health--;
+            healthTimer = 1;
+            
+        }
+        
     }
 
     private IEnumerator FOVCheck()
@@ -42,7 +54,7 @@ public class lookatplayerscript : MonoBehaviour
             {
                 float distanceToTarget = Vector2.Distance(transform.position, target.position);
 
-                if (Physics2D.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionLayer))
+                if (!Physics2D.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionLayer))
                     hasLineOfSight = true;
                 else
                     hasLineOfSight = false;
@@ -54,8 +66,34 @@ public class lookatplayerscript : MonoBehaviour
             hasLineOfSight = false;
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, radius);
 
+        Vector3 angle01 = DirectionFrameAngle(-transform.eulerAngles.z, -angle / 2);
+        Vector3 angle02 = DirectionFrameAngle(-transform.eulerAngles.z, angle / 2);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, transform.position + angle01 * radius);
+        Gizmos.DrawLine(transform.position, transform.position + angle02 * radius);
+
+        if (hasLineOfSight)
+        {
+            
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, playerRef.transform.position);
+            
+        }
+    }
+
+    private Vector2 DirectionFrameAngle(float eulerY, float angleInDegrees)
+    {
+        angleInDegrees += eulerY;
+        return new Vector2(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), Mathf.Cos(angleInDegrees * Mathf.Deg2Rad)); 
+    }
 }
+
 
 
 
