@@ -39,5 +39,6 @@ public class PlayerMovement : MonoBehaviour
         {
             Destroy(gameObject); 
         }
+        
     }   
 }
