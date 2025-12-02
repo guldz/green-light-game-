@@ -9,6 +9,11 @@ public class winscreen : MonoBehaviour
         {
             SceneManager.LoadScene(0); 
         }
+
+        if (Input.GetKey(KeyCode.R)) 
+        {
+            SceneManager.LoadScene(1);
+        }
     }
     
 }

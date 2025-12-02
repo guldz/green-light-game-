@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -34,11 +35,23 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.AddForce(new Vector2(-1, 0) * speed);
         }
+        
         Debug.Log(rb.linearVelocity);
         if (health < 0)
         {
-            Destroy(gameObject); 
+            Destroy(gameObject);
+            SceneManager.LoadSceneAsync(3);
         }
-        
-    }   
+
+        //tog hjälp av ai för att göra movement mindre slidey? 
+        if (!Input.GetKey(KeyCode.W) &&
+    !Input.GetKey(KeyCode.S) &&
+    !Input.GetKey(KeyCode.A) &&
+    !Input.GetKey(KeyCode.D))
+        {
+            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, 5f * Time.deltaTime);
+        }
+
+
+    }
 }
