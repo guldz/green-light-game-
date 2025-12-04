@@ -10,13 +10,19 @@ public class lookatplayerscript : MonoBehaviour
     public LayerMask obstructionLayer;   
     public GameObject Square; 
     public GameObject playerRef;
-    private PlayerMovement PlayerMovement; 
+    public GameObject Square2;
+    public GameObject PlayerRef2; 
+    
+    private PlayerMovement PlayerMovement;
+    private PlayermovementTWO PlayermovementTWO;
 
     public bool hasLineOfSight { get; private set; }
     private float healthTimer;
     void Start()
     {        
         playerRef = GameObject.FindGameObjectWithTag("Player");
+        StartCoroutine(FOVCheck());
+        playerRef = GameObject.FindGameObjectWithTag("Player2");
         StartCoroutine(FOVCheck());
     }
     void Update()
@@ -27,7 +33,12 @@ public class lookatplayerscript : MonoBehaviour
         {
             Square.GetComponent<PlayerMovement>().health--;
             healthTimer = 1;
-            
+        }
+        if (hasLineOfSight && healthTimer <= 0 
+        && Square2.GetComponent<PlayermovementTWO>().IsMoving)
+        {
+            Square2.GetComponent<PlayermovementTWO>().health--;
+            healthTimer = 1;
         }
         
     }
@@ -82,7 +93,8 @@ public class lookatplayerscript : MonoBehaviour
         {
             
             Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, playerRef.transform.position);
+            //Gizmos.DrawLine(transform.position, playerRef.transform.position);
+            
             
         }
     }

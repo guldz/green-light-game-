@@ -16,4 +16,9 @@ public class menu : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(0);
     }
+
+    public void LocalMultiplayer()
+    {
+        SceneManager.LoadSceneAsync(4);
+    }
 }
